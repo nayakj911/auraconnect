@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - AuraConnect</title><link rel="stylesheet" href="/css/style.css" />
+</head><body>
+  <nav class="navbar"><div class="container nav-inner">
+    <a class="brand" href="/">AuraConnect</a>
+    <div class="nav-links">
+      <a href="/pricing.html">Pricing</a>
+      <a href="/contact.html">Contact</a>
+      <a data-auth="in" href="#" data-logout>Logout</a>
+    </div>
+  </div></nav>
+  <main class="container" style="padding-top:30px;">
+    <div class="card">
+      <h2 id="welcome">Dashboard</h2>
+      <p id="email"></p>
+      <p id="sub">No active subscription</p>
+      <a class="btn" href="/pricing.html">Choose a Plan</a>
+    </div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script>
+    (async function(){
+      await window.Aura.bootNav();
+      try {
+        const data = await window.Aura.api('/api/dashboard');
+        document.getElementById('welcome').textContent = `Welcome, ${data.user.name}`;
+        document.getElementById('email').textContent = `Email: ${data.user.email}`;
+        if (data.subscription) {
+          document.getElementById('sub').textContent = `Current plan: ${data.subscription.plan}`;
+        }
+      } catch {
+        window.Aura.toast('Please login first', 'error');
+        setTimeout(()=> window.location.href='/login.html', 500);
+      }
+    })();
+  </script>
+</body></html>

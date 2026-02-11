@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact - AuraConnect</title><link rel="stylesheet" href="/css/style.css" />
+</head><body>
+  <nav class="navbar"><div class="container nav-inner">
+    <a class="brand" href="/">AuraConnect</a>
+    <div class="nav-links">
+      <a href="/pricing.html">Pricing</a>
+      <a data-auth="out" href="/login.html">Login</a>
+      <a data-auth="in" class="hidden" href="/dashboard">Dashboard</a>
+    </div>
+  </div></nav>
+  <main class="container auth-wrap card">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <label>Name</label><input name="name" required minlength="2" />
+      <label>Email</label><input type="email" name="email" required />
+      <label>Message</label><textarea name="message" rows="6" required minlength="10"></textarea>
+      <button class="btn primary" type="submit">Send Message</button>
+    </form>
+  </main>
+  <script src="/js/app.js"></script>
+  <script>
+    (async function(){
+      await window.Aura.bootNav();
+      const form = document.getElementById('contactForm');
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        try {
+          const payload = Object.fromEntries(new FormData(form).entries());
+          const data = await window.Aura.api('/api/contact', { method:'POST', body: JSON.stringify(payload) });
+          window.Aura.toast(data.message, 'success');
+          form.reset();
+        } catch(err){ window.Aura.toast(err.message, 'error'); }
+      });
+    })();
+  </script>
+</body></html>
